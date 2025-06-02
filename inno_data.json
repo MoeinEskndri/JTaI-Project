@@ -1,0 +1,44 @@
+[
+  {
+    "name": "MATRIX",
+    "line": "INNO-TDS®",
+    "indications": "",
+    "action": "",
+    "mechanism": "",
+    "pH": "",
+    "osmolarity": "",
+    "protocol": "",
+    "application": "",
+    "ingredients": [],
+    "presentation": "",
+    "language": "EN"
+  },
+  {
+    "name": "AKN-ID",
+    "line": "INNO-TDS®",
+    "indications": "• Acne-prone skin.",
+    "action": "Product designed to improve the condition of oily and acne prone skin, and to treat comedogenic and papular lesions. Its ingredients act on comedones and inflammatory lesions, helping to control acne-prone skins.",
+    "mechanism": "Its ingredients regulate sebum production, reduce open pores and pore clogging and inflammation. Therefore, it effectively reduces breakouts in acne-prone skins.",
+    "pH": "",
+    "osmolarity": "260-340 mOsmol / Kg",
+    "protocol": "Active ingredients:",
+    "application": "",
+    "ingredients": [],
+    "presentation": "Box with 4 vials of 2,5 ml.",
+    "language": "EN"
+  },
+  {
+    "name": "Hair Loss Control",
+    "line": "INNO-TDS®",
+    "indications": "",
+    "action": "Product designed to treat hair thinning in men.",
+    "mechanism": "Promotes dilation of the blood vessels around the hair follicle favouring the arrival of nutrient to the hair roots and better anchoring. It also contributes to normalize the hair growth cycles by inhibiting the formation of DHT.",
+    "pH": "",
+    "osmolarity": "260-340 mOsmol / Kg",
+    "protocol": "Active ingredients:",
+    "application": "",
+    "ingredients": [],
+    "presentation": "Box with 4 vials of 2,5ml.",
+    "language": "EN"
+  }
+]

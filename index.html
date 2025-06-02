@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>JTA</title>
+  <link rel="icon" href="./photo_5778616444089650106_y.jpg" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+@font-face {
+  font-family: 'Vazir';
+  src: url('https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.woff2') format('woff2');
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Vazir', Tahoma, sans-serif;
+  background: #fff;
+  overflow-x: hidden;
+}
+video.bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  opacity: 0.1;
+  filter: grayscale(100%) blur(5px);
+}
+.chat-container {
+  width: 100%;
+  max-width: 700px;
+  min-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+}
+.messages {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 20px 10px 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+.message {
+  max-width: 85%;
+  padding: 14px 20px;
+  border-radius: 20px;
+  line-height: 1.6;
+  font-size: 15px;
+  white-space: pre-wrap;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+  position: relative;
+  color: #000;
+  background-color: #eee;
+  word-break: break-word;
+}
+
+.user {
+  align-self: flex-end;
+  background: linear-gradient(to left, #111, #333);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.bot {
+  align-self: flex-start;
+  background-color: #fff;
+  border-bottom-left-radius: 4px;
+}
+.time {
+  font-size: 11px;
+  color: #333;
+  position: absolute;
+  bottom: -18px;
+  left: 12px;
+}
+
+.input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: #fff;
+  border-top: 1px solid #ccc;
+  display: flex;
+  padding: 10px 12px;
+  gap: 8px;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+
+textarea {
+  flex: 1;
+  height: 48px;
+  font-size: 14px;
+  padding: 12px;
+  background: #f1f1f1;
+  color: #000;
+  border: none !important;
+  border-radius: 10px;
+  resize: none;
+  outline: none !important;
+  box-shadow: none !important;
+  overflow-y: auto !important;
+}
+textarea::-webkit-scrollbar {
+  display: none;
+}
+
+button {
+  width: 48px;
+  height: 48px;
+  background: #000;
+  border: none;
+  border-radius: 50%;
+  margin-right: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, transform 0.2s;
+}
+button:hover {
+  background: #222;
+  transform: scale(1.05);
+}
+button svg {
+  width: 20px;
+  height: 20px;
+  transform: rotate(180deg);
+  fill: #fff;
+}
+
+
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+  
+.copy-btn {
+  position: absolute;
+  bottom: -14px;
+  right: 12px;
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  font-size: 12px;
+  color: #999;
+  transform: rotate(0deg);
+  transition: transform 0.2s ease, color 0.2s ease;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0;
+  line-height: 1;
+}
+.copy-btn:hover {
+  transform: rotate(-8deg);
+  color: #000;
+}
+
+
+.upload-wrapper {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  margin-left: 8px;
+  background: linear-gradient(145deg, #f0f0f0, #dcdcdc);
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.upload-wrapper:hover {
+  transform: scale(1.1) rotate(-10deg);
+}
+.upload-wrapper input[type="file"] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.upload-wrapper svg {
+  width: 22px;
+  height: 22px;
+  fill: #333;
+  transition: fill 0.3s ease;
+}
+.upload-wrapper:hover svg {
+  fill: #000;
+}
+
+
+@media (max-width: 768px) {
+  .chat-container {
+    width: 100%;
+    border-radius: 0;
+    margin: 0;
+  }
+  
+.input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: #fff;
+  border-top: 1px solid #ccc;
+  display: flex;
+  padding: 10px 12px;
+  gap: 8px;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+  .upload-wrapper {
+    width: 36px;
+    height: 36px;
+    margin-left: 6px;
+  }
+  .upload-wrapper svg {
+    width: 20px;
+    height: 20px;
+  }
+  #recordButton {
+    width: 40px;
+    height: 40px;
+  }
+  textarea {
+    font-size: 14px;
+    max-height: 80px;
+    border-radius: 999px;
+    margin: 0 6px;
+  }
+}
+
+@media (min-width: 769px) {
+  .chat-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+  
+.input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: #fff;
+  border-top: 1px solid #ccc;
+  display: flex;
+  padding: 10px 12px;
+  gap: 8px;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+  .upload-wrapper {
+    width: 40px;
+    height: 40px;
+    margin-left: 8px;
+  }
+  textarea {
+    font-size: 15px;
+  }
+}
+
+
+#toggleMute {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  text-decoration: none;
+}
+#toggleMute.muted {
+  text-decoration: line-through;
+  color: #333;
+}
+
+
+@media (max-width: 768px) {
+  .chat-container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+  }
+  .input-area {
+    gap: 6px;
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 0;
+  }
+  .upload-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+  textarea {
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    max-height: 80px;
+  }
+  .message {
+    font-size: 14px;
+    padding: 12px 16px;
+    margin-bottom: 4px;
+    border-radius: 16px;
+  }
+  .message-footer {
+    font-size: 12px;
+  }
+  #toggleMute {
+    font-size: 13px;
+    top: 10px;
+    left: 10px;
+  }
+}
+
+@media (min-width: 769px) {
+  .chat-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+  .input-area {
+    gap: 10px;
+    padding: 10px 14px;
+    font-size: 15px;
+  }
+  .upload-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+  textarea {
+    font-size: 15px;
+    padding: 12px 16px;
+    border-radius: 999px;
+    max-height: 100px;
+  }
+  .message {
+    font-size: 15px;
+    padding: 14px 20px;
+    margin-bottom: 6px;
+    border-radius: 20px;
+  }
+  .message-footer {
+    font-size: 13px;
+  }
+}
+
+
+html, body {
+  height: 100%;
+  overflow-y: auto;
+}
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 100px;
+}
+
+</style>
+</head>
+<body>
+
+<div style="position: absolute; top: 12px; left: 14px; z-index: 20;">
+  <button id="toggleMute" class="muter" title="قطع صدا" onclick="sendQuestion()">mute</button>
+</div>
+
+  <video class="bg-video" autoplay muted loop>
+    <source src="background.mp4" type="video/mp4">
+  </video>
+
+  <div class="chat-container">
+    <div class="messages" id="messages"></div>
+    <div class="input-area">
+      <div class="upload-wrapper" title="آپلود فایل">
+        <input type="file" id="fileInput" />
+        <svg viewBox="0 0 24 24"><path d="M19.35 10.04A7.49 7.49 0 0 0 5.3 6.1a5.5 5.5 0 0 0 0 11h13.05a4.5 4.5 0 0 0 1-8.86z"/></svg>
+      </div>
+        <textarea id="question" placeholder="سؤالت رو بنویس..."></textarea>
+
+<div id="filePreview" style="margin-top: 10px; display: none;">
+  <div style="font-size: 13px; color: #555; margin-bottom: 6px;" id="fileName"></div>
+  <textarea id="fileCaption" placeholder="توضیحی برای فایل بنویس..." style="width: 100%; font-size: 14px; padding: 8px; border-radius: 8px; border: 1px solid #ccc;"></textarea>
+</div>
+
+      <button onclick="sendQuestion()" title="ارسال">
+        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  
+
+</body>
+</html>
+
+<script>
+let uploadedFile = null;
+let isMuted = false;
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+      addMessage("سلام! من JTaI (جهان تیوا آرا) هستم، نماینده رسمی شرکت‌های Amiea (آلمان) و Innoaesthetics (اسپانیا) در ایران. چطور کمکتون کنم؟", 'bot');
+    }, 500);
+
+  const muteBtn = document.getElementById('toggleMute');
+  muteBtn.addEventListener('click', () => {
+    isMuted = !isMuted;
+    muteBtn.innerText = isMuted ? 'muted' : 'mute';
+    muteBtn.classList.toggle('muted', isMuted);
+  });
+
+  document.getElementById('fileInput').addEventListener('change', () => {
+    const file = document.getElementById('fileInput').files[0];
+    if (file) {
+      uploadedFile = file;
+      document.getElementById('filePreview').style.display = 'block';
+      document.getElementById('fileName').innerText = "📎 " + file.name;
+    }
+  });
+
+  const input = document.getElementById('question');
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendQuestion();
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('copy-btn')) {
+      const msg = e.target.closest('.message');
+      const time = msg.querySelector('.time');
+      if (time) time.remove();
+      const text = msg.innerText;
+      navigator.clipboard.writeText(text);
+      e.target.innerText = "Copied!";
+      setTimeout(() => e.target.innerText = "copy", 1500);
+    }
+
+    if (e.target.classList.contains('speak-btn')) {
+      const msg = e.target.closest('.message');
+      const time = msg.querySelector('.time');
+      if (time) time.remove();
+      const text = msg.innerText;
+      speak(text);
+    }
+  });
+});
+
+function sendQuestion() {
+  const input = document.getElementById('question');
+  const caption = document.getElementById('fileCaption');
+  const text = input.value.trim();
+  const captionText = caption ? caption.value.trim() : '';
+
+  if (!text && !uploadedFile) return;
+
+  if (uploadedFile) {
+    let displayText = "📎 فایل آپلود شد: " + uploadedFile.name;
+    if (captionText) {
+      displayText += "\n" + captionText;
+    }
+    addMessage(displayText, 'user');
+  } else {
+    addMessage(text, 'user');
+  }
+
+  input.value = '';
+  if (caption) caption.value = '';
+  document.getElementById('fileInput').value = '';
+  document.getElementById('filePreview').style.display = 'none';
+
+  addMessage('⏳ در حال پاسخ‌گویی...', 'bot');
+
+  fetch("/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question: text || captionText })
+  })
+  .then(res => res.json())
+  .then(data => {
+    removeTyping();
+    addMessage(data.answer, 'bot');
+    if (isGreeting(text || captionText)) {
+      speak(data.answer);
+    }
+  })
+  .catch(() => {
+    removeTyping();
+    addMessage("❌ خطا در اتصال به سرور.", 'bot');
+  });
+
+  uploadedFile = null;
+}
+
+function addMessage(text, type) {
+  const msgBox = document.getElementById('messages');
+  const wrapper = document.createElement('div');
+  wrapper.className = `message ${type}`;
+  const now = new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+
+  const textSpan = document.createElement('div');
+  textSpan.innerText = text;
+
+  const footer = document.createElement('div');
+  footer.className = `message-footer ${type}-footer`;
+  const time = document.createElement('div');
+  time.className = 'time';
+  time.innerText = now;
+
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'copy-btn';
+  copyBtn.innerText = 'copy';
+  copyBtn.title = 'کپی';
+
+  footer.appendChild(copyBtn);
+
+  
+
+  footer.appendChild(time);
+  wrapper.appendChild(textSpan);
+  wrapper.appendChild(footer);
+  msgBox.appendChild(wrapper);
+  msgBox.scrollTop = msgBox.scrollHeight;
+}
+
+function removeTyping() {
+  const msgBox = document.getElementById('messages');
+  const all = msgBox.querySelectorAll('.message.bot');
+  if (all.length && all[all.length - 1].textContent.includes('در حال پاسخ‌گویی')) {
+    msgBox.removeChild(all[all.length - 1]);
+  }
+}
+
+function speak(text) {
+  if (isMuted) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fa-IR';
+  speechSynthesis.speak(utterance);
+}
+
+
+function isGreeting(text) {
+  const greetings = ['سلام', 'درود', 'hi', 'hello'];
+  const intros = ['خودتو معرفی کن', 'خودت رو معرفی کن', 'کی هستی', 'معرفی کن', 'تو کی هستی'];
+  const allTriggers = greetings.concat(intros);
+  return allTriggers.some(word => text.toLowerCase().includes(word));
+}
+
+</script>
